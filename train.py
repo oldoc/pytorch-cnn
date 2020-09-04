@@ -67,7 +67,7 @@ parser.add_argument('--init-lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--lr-type', default='SGDR', type=str, help='learning rate strategy')
 parser.add_argument('--milestones', default=[150, 225], type=list, help='milestones for lr-multistep')
 parser.add_argument('--sgdr-t', default=10, type=int, dest='sgdr_t',help='SGDR T_0')
-parser.add_argument('--epochs', type=int, default=10, help='number of epochs to train')
+parser.add_argument('--epochs', type=int, default=1270, help='number of epochs to train')
 parser.add_argument('--gpu-id', type=str, default='0')
 parser.add_argument('--manual_seed', type=int, default=0)
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
@@ -79,11 +79,6 @@ parser.add_argument('--savelast', type=bool, default=True)
 args = parser.parse_args()
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 best_acc = 0.0  # best test accuracy
-
-if args.resume is False:
-    with open('result/'+ os.path.basename(__file__).split('.')[0] +'.txt', 'a+') as f:
-        f.seek(0)
-        f.truncate()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
