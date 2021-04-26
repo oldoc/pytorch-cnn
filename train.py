@@ -18,6 +18,9 @@ import time
 import math
 from regularization.dropblock import LinearScheduler, SGDRScheduler
 
+import vis
+import cv2
+
 # Cutout data enhance
 class Cutout(object):
     """Randomly mask out one or more patches from an image.
@@ -262,7 +265,20 @@ def train(epoch):
 
         optimizer.zero_grad()
         outputs = net(inputs)
-        loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+        
+        sparse = False
+	regu_loss_weight = 0.0001
+        if sparse:
+
+            regu_loss = 0
+            for param in net.parameters():
+                regu_loss += torch.sum(torch.abs(param))
+            #print(regu_loss)
+        
+            loss = regu_loss_weight * regu_loss +  mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+        else:
+            loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+
         loss.backward()
         optimizer.step()
 
@@ -275,6 +291,8 @@ def train(epoch):
     with open('result/'+ os.path.basename(__file__).split('.')[0] +'.csv', 'a+') as f:
         f.write('{0},{1:.4f}'.format(epoch, lr))
 
+    # transfer weight to image and save to img folder
+    #cv2.imwrite("img/"+str(epoch).zfill(4)+".jpg", vis.vis(net))
 
 def test(epoch):
     global best_acc
