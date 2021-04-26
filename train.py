@@ -267,7 +267,7 @@ def train(epoch):
         outputs = net(inputs)
         
         sparse = False
-	regu_loss_weight = 0.0001
+        regu_loss_weight = 0.0001
         if sparse:
             regu_loss = 0
             for param in net.parameters():
@@ -276,6 +276,7 @@ def train(epoch):
             loss = regu_loss_weight * regu_loss +  mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
         else:
             loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+        
         loss.backward()
         optimizer.step()
 
