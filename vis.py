@@ -38,6 +38,7 @@ def vis(net,czoom = 10, fzoom = 2):
             yitv = np.ones(img.shape[0])
             for i in range(shape[0]+1):
                 img = np.insert(img, i + i * shape[2] * czoom, yitv, axis=1)
+            layers.append(img)
 
         #如果是全连接层
         if len(shape) == 2:
@@ -54,8 +55,8 @@ def vis(net,czoom = 10, fzoom = 2):
 
             yitv = np.ones(img.shape[0])
             img = np.insert(img, img.shape[1], yitv, axis=1)
+            layers.append(img)
 
-        layers.append(img)
     maxy = max(layer.shape[1] for layer in layers)
 
     img = np.pad(layers[0],((0,0),(0,maxy - layers[0].shape[1])), 'constant')
